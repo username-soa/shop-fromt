@@ -27,7 +27,7 @@ const UserInfoForm = ({ updateInfo, user }) => {
           pwd: Yup.string(),
         })}
         onSubmit={async (data) => {
-          await updateInfo(data, user.shopifyID);
+          await updateInfo(data, user?.shopifyID);
         }}
       >
         {({ handleSubmit, isSubmitting, values }) => (

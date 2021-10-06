@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { motion } from "framer-motion";
 import { useHistory } from "react-router-dom";
 import { ReactComponent as SearchIcone } from "../../assets/close.svg";
+import UserContext from "../../contexts/UserExperienceContext";
+import jwt from "jsonwebtoken";
 
 const Menu = ({ state, setState }) => {
   let isMounted = true;
@@ -15,9 +17,20 @@ const Menu = ({ state, setState }) => {
   };
   const [search, serSearch] = useState("");
   const history = useHistory();
+  const { saveUserEvent } = useContext(UserContext);
 
   const handleSearch = (e) => {
     if (e.key === "Enter" && e.target.value.length !== 0) {
+      if (localStorage.getItem("ec_user_token") !== null) {
+        const userToken = localStorage.getItem("ec_user_token");
+        jwt.verify(
+          userToken,
+          "d6d82b79-5226-454c-a36d-17bc13bcd6f2",
+          async (err, decoded) => {
+            await saveUserEvent(decoded?.documentId, "search");
+          }
+        );
+      }
       setState(false);
       history.push(`/search/${e.target.value}`);
     }

@@ -18,11 +18,13 @@ import TermesConditions from "./pages/TermesConditions";
 import ShippingInfo from "./pages/ShippingInfo";
 import Collection from "./pages/Collection";
 import { ClientProvider } from "./contexts/ClientContext";
+import { UserProvider } from "./contexts/UserExperienceContext";
 
 function App() {
   const location = useLocation();
   return (
-    <ClientProvider>
+    <UserProvider>
+      {/* <ClientProvider> */}
       <ScrollToTop />
       <AnimatePresence exitBeforeEnter>
         <Switch location={location} key={location.key}>
@@ -44,7 +46,8 @@ function App() {
           <Route path="*" component={NotFound} />
         </Switch>
       </AnimatePresence>
-    </ClientProvider>
+      {/* </ClientProvider> */}
+    </UserProvider>
   );
 }
 

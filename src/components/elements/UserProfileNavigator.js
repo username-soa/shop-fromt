@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import styled from "styled-components";
 import { Link, useLocation, useHistory } from "react-router-dom";
 import { ReactComponent as PlusIcone } from "../../assets/down-arrow.svg";
@@ -6,10 +6,13 @@ import { ReactComponent as InfoIcone } from "../../assets/user2.svg";
 import { ReactComponent as AdresseIcone } from "../../assets/adress-book.svg";
 import { ReactComponent as OrderIcone } from "../../assets/sent.svg";
 import { ReactComponent as LogoutIcone } from "../../assets/logout.svg";
+import UserContext from "../../contexts/UserExperienceContext";
+import jwt from "jsonwebtoken";
 
 const UserProfileNavigator = () => {
   const [expand, setExpand] = useState(0);
   const [highlight, setHighlight] = useState(0);
+  const { saveUserEvent } = useContext(UserContext);
   let location = useLocation();
   const history = useHistory();
 
@@ -27,7 +30,6 @@ const UserProfileNavigator = () => {
         break;
     }
   };
-
   const getName = () => {
     switch (location.pathname) {
       case "/account":
@@ -56,7 +58,17 @@ const UserProfileNavigator = () => {
     }
   };
 
-  const disconnect = () => {
+  const disconnect = async () => {
+    if (localStorage.getItem("ec_user_token") !== null) {
+      const userToken = localStorage.getItem("ec_user_token");
+      jwt.verify(
+        userToken,
+        "d6d82b79-5226-454c-a36d-17bc13bcd6f2",
+        async (err, decoded) => {
+          await saveUserEvent(decoded?.documentId, "logout");
+        }
+      );
+    }
     localStorage.removeItem("ec_shopify_token");
     localStorage.removeItem("ec_shopify_accessToken");
     history.push("/");
