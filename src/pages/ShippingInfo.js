@@ -1,11 +1,24 @@
 import React from "react";
 import styled from "styled-components";
+import { useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import CustomHelmet from "../components/elements/CustomHelmet";
 import Layout from "../layouts/DefaultLayout";
 import { ReactComponent as ShippingIcone } from "../assets/shipping.svg";
+import useIsAllowed from "../hooks/useIsAllowed";
+import useTrackHovers from "../hooks/useTrackHovers";
+import usePageClicks from "../hooks/usePageClicks";
+import usePageVisits from "../hooks/usePageVisits";
+import usePageScrolls from "../hooks/usePagsScrolls";
 
 const ShippingInfo = () => {
+  const location = useLocation();
+  const pageStatus = useIsAllowed(location?.pathname);
+  usePageClicks(pageStatus?.clicks, "mousedown", location?.pathname);
+  useTrackHovers(pageStatus?.hovers, "mousemove", location?.pathname);
+  usePageScrolls(pageStatus?.scroll, "scroll", location?.pathname);
+  usePageVisits(pageStatus?.visits, pageStatus?.pageID);
+
   const HeaderVariants = {
     hidden: { y: "100px", opacity: 0 },
     visible: {

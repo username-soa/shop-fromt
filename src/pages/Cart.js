@@ -2,15 +2,27 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { motion } from "framer-motion";
 import useHasBeenViewed from "../hooks/useHasBeenViewed";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Layout from "../layouts/DefaultLayout";
 import CustomHelmet from "../components/elements/CustomHelmet";
 import Button from "../components/elements/Button";
 import CartTotale from "../components/CartComponents/CartTotale";
 import CartItem from "../components/CartComponents/CartItem";
+import useIsAllowed from "../hooks/useIsAllowed";
+import useTrackHovers from "../hooks/useTrackHovers";
+import usePageClicks from "../hooks/usePageClicks";
+import usePageVisits from "../hooks/usePageVisits";
+import usePageScrolls from "../hooks/usePagsScrolls";
 import { productList } from "../utils/Products";
 
 const CartPage = () => {
+  const location = useLocation();
+  const pageStatus = useIsAllowed(location?.pathname);
+  usePageClicks(pageStatus?.clicks, "mousedown", location?.pathname);
+  useTrackHovers(pageStatus?.hovers, "mousemove", location?.pathname);
+  usePageScrolls(pageStatus?.scroll, "scroll", location?.pathname);
+  usePageVisits(pageStatus?.visits, pageStatus?.pageID);
+
   const H1Variants = {
     hidden: { opacity: 0, y: "100px" },
     visible: {

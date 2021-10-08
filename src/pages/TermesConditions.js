@@ -1,11 +1,24 @@
 import React from "react";
 import styled from "styled-components";
 import { motion } from "framer-motion";
+import { useLocation } from "react-router-dom";
 import CustomHelmet from "../components/elements/CustomHelmet";
 import Layout from "../layouts/DefaultLayout";
 import { ReactComponent as TermsIcone } from "../assets/terms.svg";
+import useIsAllowed from "../hooks/useIsAllowed";
+import useTrackHovers from "../hooks/useTrackHovers";
+import usePageClicks from "../hooks/usePageClicks";
+import usePageVisits from "../hooks/usePageVisits";
+import usePageScrolls from "../hooks/usePagsScrolls";
 
 const TermesConditions = () => {
+  const location = useLocation();
+  const pageStatus = useIsAllowed(location?.pathname);
+  usePageClicks(pageStatus?.clicks, "mousedown", location?.pathname);
+  useTrackHovers(pageStatus?.hovers, "mousemove", location?.pathname);
+  usePageVisits(pageStatus?.visits, pageStatus?.pageID);
+  usePageScrolls(pageStatus?.scroll, "scroll", location?.pathname);
+
   const HeaderVariants = {
     hidden: { y: "100px", opacity: 0 },
     visible: {

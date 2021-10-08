@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useState, useContext } from "react";
+import { useParams, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import styled from "styled-components";
 import useHasBeenViewed from "../hooks/useHasBeenViewed";
@@ -13,6 +13,12 @@ import ProductCartSkeleton from "../components/skeletons/ProductCartSkeleton";
 import ProductImagesSkeleton from "../components/skeletons/ProductImagesSkeleton";
 import HeaderSkeleton from "../components/skeletons/HeaderSkeleton";
 import { productList } from "../utils/Products";
+import useIsAllowed from "../hooks/useIsAllowed";
+import useTrackHovers from "../hooks/useTrackHovers";
+import usePageClicks from "../hooks/usePageClicks";
+import usePageVisits from "../hooks/usePageVisits";
+import usePageScrolls from "../hooks/usePagsScrolls";
+import ClicksContext from "../contexts/ClicksContext";
 
 const Product = () => {
   const H2Variants = {
@@ -32,9 +38,15 @@ const Product = () => {
     },
   };
   const { uid, cid } = useParams();
+  const location = useLocation();
+  const { allowedpages, trackHoverData } = useContext(ClicksContext);
   const [loading, setLoading] = useState(true);
   const [hasBeenViewed, ref] = useHasBeenViewed();
-
+  const pageStatus = useIsAllowed(location?.pathname);
+  usePageClicks(pageStatus?.clicks, "mousedown", location?.pathname);
+  useTrackHovers(pageStatus?.hovers, "mousemove", location?.pathname);
+  usePageScrolls(pageStatus?.scroll, "scroll", location?.pathname);
+  usePageVisits(pageStatus?.visits, pageStatus?.pageID);
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);

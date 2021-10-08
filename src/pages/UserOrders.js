@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { motion } from "framer-motion";
+import { useLocation } from "react-router-dom";
 import Layout from "../layouts/DefaultLayout";
 import CustomHelmet from "../components/elements/CustomHelmet";
 import UserProfileNavigator from "../components/elements/UserProfileNavigator";
@@ -8,9 +9,22 @@ import UserProfileContainer from "../layouts/UserAccountContainer";
 import UserCommandeList from "../components/CartComponents/UserCommandeList";
 import Pagination from "../components/elements/Pagination";
 import UserOrdersSkeleton from "../components/skeletons/UserOrdersSkeleton";
+import useIsAllowed from "../hooks/useIsAllowed";
+import useTrackHovers from "../hooks/useTrackHovers";
+import usePageClicks from "../hooks/usePageClicks";
+import usePageVisits from "../hooks/usePageVisits";
+import usePageScrolls from "../hooks/usePagsScrolls";
 
 const UserOrders = () => {
+  const location = useLocation();
+  const pageStatus = useIsAllowed(location?.pathname);
+  usePageClicks(pageStatus?.clicks, "mousedown", location?.pathname);
+  useTrackHovers(pageStatus?.hovers, "mousemove", location?.pathname);
+  usePageScrolls(pageStatus?.scroll, "scroll", location?.pathname);
+  usePageVisits(pageStatus?.visits, pageStatus?.pageID);
+
   const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
@@ -19,6 +33,7 @@ const UserOrders = () => {
       clearTimeout(timer);
     };
   }, []);
+
   if (loading) {
     return (
       <Layout>

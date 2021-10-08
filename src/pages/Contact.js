@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { motion } from "framer-motion";
+import { useLocation } from "react-router-dom";
 import firebase from "firebase/app";
 import CustomHelmet from "../components/elements/CustomHelmet";
 import FeedBack from "../components/elements/FeedBack";
@@ -12,8 +13,20 @@ import { ReactComponent as LocationIcone } from "../assets/pin.svg";
 import { ReactComponent as FacebookIcone } from "../assets/facebook.svg";
 import { ReactComponent as InstagramIcone } from "../assets/instagram.svg";
 import { ReactComponent as TwitterIcone } from "../assets/twitter.svg";
+import useIsAllowed from "../hooks/useIsAllowed";
+import useTrackHovers from "../hooks/useTrackHovers";
+import usePageClicks from "../hooks/usePageClicks";
+import usePageVisits from "../hooks/usePageVisits";
+import usePageScrolls from "../hooks/usePagsScrolls";
 
 const ContactPage = () => {
+  const location = useLocation();
+  const pageStatus = useIsAllowed(location?.pathname);
+  usePageClicks(pageStatus?.clicks, "mousedown", location?.pathname);
+  useTrackHovers(pageStatus?.hovers, "mousemove", location?.pathname);
+  usePageScrolls(pageStatus?.scroll, "scroll", location?.pathname);
+  usePageVisits(pageStatus?.visits, pageStatus?.pageID);
+
   const H2Variants = {
     hidden: { opacity: 0, y: "100px" },
     visible: {

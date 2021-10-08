@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import styled from "styled-components";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import firebase from "firebase/app";
 import { graphql } from "react-apollo";
@@ -11,8 +11,16 @@ import SigninForm from "../components/FormeComponents/SigninForm";
 import AdminContext from "../contexts/AuthContext";
 import UserContext from "../contexts/UserExperienceContext";
 import jwt from "jsonwebtoken";
+import { checkUrl } from "../utils/UserClicks";
+import useIsAllowed from "../hooks/useIsAllowed";
+import useTrackHovers from "../hooks/useTrackHovers";
+import usePageClicks from "../hooks/usePageClicks";
+import usePageVisits from "../hooks/usePageVisits";
+import usePageScrolls from "../hooks/usePagsScrolls";
 
 const LoginPage = () => {
+  //test
+  const location = useLocation();
   const db = firebase.firestore();
   const Logincustomer = gql`
     mutation customerAccessTokenCreate(
@@ -55,6 +63,12 @@ const LoginPage = () => {
   const history = useHistory();
   const [show, setShow] = useState(true);
   const [errors, setErrors] = useState(false);
+  const pageStatus = useIsAllowed(location?.pathname);
+  usePageClicks(pageStatus?.clicks, "mousedown", location?.pathname);
+  useTrackHovers(pageStatus?.hovers, "mousemove", location?.pathname);
+  usePageScrolls(pageStatus?.scroll, "scroll", location?.pathname);
+  usePageVisits(pageStatus?.visits, pageStatus?.pageID);
+
   // const [customerCreate, { data, loading, error }] =
   //   useMutation(createCustomer);
   // const [customerAccessTokenCreate, { dd, ll, er }] =

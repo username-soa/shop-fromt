@@ -60,10 +60,6 @@ const Layout = ({ children }) => {
       });
   };
 
-  useEffect(() => {
-    console.log(cartsidemenu);
-  }, [cartsidemenu]);
-
   return (
     <Container sideMenu={sideMenu} status={scrollDir}>
       <div className="menu">

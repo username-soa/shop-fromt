@@ -1,11 +1,24 @@
 import React from "react";
 import styled from "styled-components";
 import { motion } from "framer-motion";
+import { useLocation } from "react-router-dom";
 import CustomHelmet from "../components/elements/CustomHelmet";
 import Layout from "../layouts/DefaultLayout";
 import { ReactComponent as PrivacyIcone } from "../assets/privacypolicy.svg";
+import useIsAllowed from "../hooks/useIsAllowed";
+import useTrackHovers from "../hooks/useTrackHovers";
+import usePageClicks from "../hooks/usePageClicks";
+import usePageVisits from "../hooks/usePageVisits";
+import usePageScrolls from "../hooks/usePagsScrolls";
 
 const PrivacyPolicy = () => {
+  const location = useLocation();
+  const pageStatus = useIsAllowed(location?.pathname);
+  usePageClicks(pageStatus?.clicks, "mousedown", location?.pathname);
+  useTrackHovers(pageStatus?.hovers, "mousemove", location?.pathname);
+  usePageScrolls(pageStatus?.scroll, "scroll", location?.pathname);
+  usePageVisits(pageStatus?.visits, pageStatus?.pageID);
+
   const HeaderVariants = {
     hidden: { y: "100px", opacity: 0 },
     visible: {
@@ -22,6 +35,7 @@ const PrivacyPolicy = () => {
       transition: { duration: 1, delay: 0.5, type: "Inertia" },
     },
   };
+
   return (
     <Layout>
       <Container

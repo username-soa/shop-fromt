@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import styled from "styled-components";
 import { motion } from "framer-motion";
+import { useLocation } from "react-router-dom";
 import Layout from "../layouts/DefaultLayout";
 import CustomHelmet from "../components/elements/CustomHelmet";
 import HomeMainCart from "../components/CartComponents/HomeMainCart";
@@ -11,15 +12,23 @@ import HomeProductsShowcase from "../components/CartComponents/HomeProductsShowc
 import CollectionSkeleton from "../components/skeletons/CollectionSkeleton";
 import ProductCartSkeleton from "../components/skeletons/ProductCartSkeleton";
 import HeaderSkeleton from "../components/skeletons/HeaderSkeleton";
+import useIsAllowed from "../hooks/useIsAllowed";
+import useTrackHovers from "../hooks/useTrackHovers";
+import usePageClicks from "../hooks/usePageClicks";
+import usePageVisits from "../hooks/usePageVisits";
+import usePageScrolls from "../hooks/usePagsScrolls";
+import ClicksContext from "../contexts/ClicksContext";
 
 const Home = () => {
-  const exitVariants = {
-    exit: {
-      x: "-100vh",
-      transition: { ease: "easeInOut" },
-    },
-  };
+  const location = useLocation();
+  const pageStatus = useIsAllowed(location?.pathname);
+  const { allowedpages, trackHoverData } = useContext(ClicksContext);
+  usePageClicks(pageStatus?.clicks, "mousedown", location?.pathname);
+  useTrackHovers(pageStatus?.hovers, "mousemove", location?.pathname);
+  usePageScrolls(pageStatus?.scroll, "scroll", location?.pathname);
+  usePageVisits(pageStatus?.visits, pageStatus?.pageID);
   const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);

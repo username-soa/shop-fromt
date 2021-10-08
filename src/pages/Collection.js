@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import useHasBeenViewed from "../hooks/useHasBeenViewed";
 import Layout from "../layouts/DefaultLayout";
@@ -9,9 +10,21 @@ import HomeMainCart from "../components/CartComponents/HomeMainCart";
 import CollectionSkeleton from "../components/skeletons/CollectionSkeleton";
 import ProductCartSkeleton from "../components/skeletons/ProductCartSkeleton";
 import HeaderSkeleton from "../components/skeletons/HeaderSkeleton";
+import useIsAllowed from "../hooks/useIsAllowed";
+import useTrackHovers from "../hooks/useTrackHovers";
+import usePageClicks from "../hooks/usePageClicks";
+import usePageVisits from "../hooks/usePageVisits";
+import usePageScrolls from "../hooks/usePagsScrolls";
 import { productList } from "../utils/Products";
 
 const Collection = () => {
+  const location = useLocation();
+  const pageStatus = useIsAllowed(location?.pathname);
+  usePageClicks(pageStatus?.clicks, "mousedown", location?.pathname);
+  useTrackHovers(pageStatus?.hovers, "mousemove", location?.pathname);
+  usePageScrolls(pageStatus?.scroll, "scroll", location?.pathname);
+  usePageVisits(pageStatus?.visits, pageStatus?.pageID);
+
   const H2Variants = {
     hidden: { opacity: 0, y: "100px" },
     visible: {
