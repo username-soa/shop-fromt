@@ -12,11 +12,12 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
 const httpLink = createHttpLink({
-  uri: "https://digitalerag.myshopify.com/api/2021-07/graphql.json",
+  uri: "https://yacado-peche.myshopify.com/api/2021-10/graphql.json",
 });
 const middlewareLink = setContext(() => ({
   headers: {
-    "X-Shopify-Storefront-Access-Token": "bc34d8195aadb3c8b794f906fe2745e7",
+    /* "X-Shopify-Storefront-Access-Token": "bc34d8195aadb3c8b794f906fe2745e7", */
+    "X-Shopify-Storefront-Access-Token": "211dc1eef2e2076151e87543a24ec18e",
   },
 }));
 

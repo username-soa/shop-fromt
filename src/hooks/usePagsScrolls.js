@@ -27,7 +27,7 @@ const usePageScrolls = (status, eventType, location, element = window) => {
       var trackLength = docHeight - winHeight;
       finaObj.y = Math.floor((scrollTop / trackLength) * 1000);
       finaObj.uniqueProp = t.getTime();
-      return { finaObj };
+      return { ...finaObj };
     };
 
     const update = () => {

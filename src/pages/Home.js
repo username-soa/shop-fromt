@@ -2,6 +2,12 @@ import React, { useEffect, useState, useContext } from "react";
 import styled from "styled-components";
 import { motion } from "framer-motion";
 import { useLocation } from "react-router-dom";
+import { useQuery } from "@apollo/client";
+import {
+  getProducts,
+  getCollections,
+  getCoolectionByHandler,
+} from "../utils/GraphQLQueries";
 import Layout from "../layouts/DefaultLayout";
 import CustomHelmet from "../components/elements/CustomHelmet";
 import HomeMainCart from "../components/CartComponents/HomeMainCart";
@@ -28,6 +34,12 @@ const Home = () => {
   usePageScrolls(pageStatus?.scroll, "scroll", location?.pathname);
   usePageVisits(pageStatus?.visits, pageStatus?.pageID);
   const [loading, setLoading] = useState(true);
+  const {
+    loading: productsLoading,
+    error: productsError,
+    data: productsData,
+  } = useQuery(getCoolectionByHandler);
+  console.log(productsLoading, productsError, productsData);
 
   useEffect(() => {
     const timer = setTimeout(() => {

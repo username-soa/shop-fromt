@@ -9,6 +9,9 @@ import { useHistory, useLocation, useRouteMatch } from "react-router-dom";
 import firebase from "firebase/app";
 import jwt from "jsonwebtoken";
 import { saveHoversToBrowser } from "../utils/UserClicks";
+import useSaveClicks from "../hooks/useSaveClicks";
+import useSaveHovers from "../hooks/useSaveHovers";
+import useSaveScroll from "../hooks/useSaveScroll";
 
 const ClicksContext = createContext({});
 
@@ -40,14 +43,16 @@ export const ClicksProvider = ({ children }) => {
 
   //hover data
   const trackHoverData = (path, data) => {
-    console.log("hover data function : ", data);
+    // console.log("hover data function : ", data);
     if (Object.keys(data).length !== 0 && data.constructor === Object) {
       const { obj } = data;
       setHovers((hovers) => [...hovers, obj]);
       setHoversLocation(path);
     }
   };
-
+  useSaveClicks();
+  useSaveHovers();
+  useSaveScroll();
   useEffect(() => {
     getAloowedPages();
   }, []);
